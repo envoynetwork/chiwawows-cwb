@@ -1,6 +1,6 @@
 import { program } from 'commander';
 import * as anchor from '@project-serum/anchor';
-import { Keypair, PublicKey, Transaction } from '@solana/web3.js';
+import { Keypair, Transaction } from '@solana/web3.js';
 import log from 'loglevel';
 import { AIRDROP_TOKEN_MINT, CONNECTION, POOL_ID, PROGRAM_ID } from './constants';
 import { createAssociatedTokenAccountInstruction, getTokenWallet, loadAnchorProgram, loadWalletKey, sendTransaction } from './util';
@@ -19,7 +19,7 @@ program.
   .option(
     '-a, --amount <path>',
     `Token airdrop amount`,
-    '--keypair not provided',
+    '--amount not provided',
   )
   .action(async (directory, cmd) => {
     const { keypair, amount } = cmd.opts();
@@ -28,7 +28,7 @@ program.
     const anchorProgram = await loadAnchorProgram(walletKeyPair);
 
     let randomPubkey = Keypair.generate().publicKey;
-    let [pool, bump] = await PublicKey.findProgramAddress([randomPubkey.toBuffer()], PROGRAM_ID);
+    let [pool, bump] = await anchor.web3.PublicKey.findProgramAddress([randomPubkey.toBuffer()], PROGRAM_ID);
     let airdropAccount = await getTokenWallet(pool, AIRDROP_TOKEN_MINT);
     let transaction = new Transaction();
     let signers : Keypair[] = [];
@@ -36,8 +36,8 @@ program.
     transaction.add(createAssociatedTokenAccountInstruction(airdropAccount, walletKeyPair.publicKey, pool, AIRDROP_TOKEN_MINT));
     transaction.add(
         await anchorProgram.instruction.initPool(
-            new anchor.BN(amount),
             new anchor.BN(bump),
+            new anchor.BN(amount),
             {
                 accounts:{
                     owner : walletKeyPair.publicKey,
@@ -48,7 +48,7 @@ program.
                     systemProgram : anchor.web3.SystemProgram.programId,
                 }
             }
-        )                               
+        )
     );
     await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
 
@@ -65,7 +65,7 @@ program.
   .option(
     '-a, --amount <path>',
     `Token airdrop amount`,
-    '--keypair not provided',
+    '--amount not provided',
   )
   .action(async (directory, cmd) => {
     const { keypair, amount } = cmd.opts();

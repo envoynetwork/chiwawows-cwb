@@ -1,4 +1,4 @@
-import { Keypair, PublicKey, Transaction } from '@solana/web3.js';
+import { Keypair, Transaction } from '@solana/web3.js';
 import { programs } from '@metaplex/js';
 import * as anchor from '@project-serum/anchor';
 const { metadata: { Metadata, MetadataProgram } } = programs;
@@ -69,7 +69,7 @@ async function fetchHashTableV1(hash: string) {
   return mintHashes;
 }
 
-async function fetchHashTableV2(firstCreatorAddress: PublicKey) {
+async function fetchHashTableV2(firstCreatorAddress: anchor.web3.PublicKey) {
   const metadataAccounts = await CONNECTION.getProgramAccounts(
       TOKEN_METADATA_PROGRAM,
       {
@@ -97,8 +97,8 @@ async function fetchHashTableV2(firstCreatorAddress: PublicKey) {
 };
 
 async function getCandyMachineV2Creator(candyMachine: string) {
-  let candyMachinePubkey = new PublicKey(candyMachine);
-  return PublicKey.findProgramAddress(
+  let candyMachinePubkey = new anchor.web3.PublicKey(candyMachine);
+  return anchor.web3.PublicKey.findProgramAddress(
     [Buffer.from('candy_machine'), candyMachinePubkey.toBuffer()],
     CANDY_MACHINE_V2_PROGRAM,
   );
@@ -134,7 +134,7 @@ async function getNFTOwner(hash: string) {
   return res;
 };
 
-async function transferToken(holder: PublicKey) {
+async function transferToken(holder: anchor.web3.PublicKey) {
   const walletKeyPair = loadWalletKey(KEYPAIR_PATH);
   const anchorProgram = await loadAnchorProgram(walletKeyPair);
 
@@ -163,7 +163,7 @@ async function transferToken(holder: PublicKey) {
   await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
 }
 
-async function mintToToken(holder: PublicKey) {
+async function mintToToken(holder: anchor.web3.PublicKey) {
   const walletKeyPair = loadWalletKey(KEYPAIR_PATH);
   const anchorProgram = await loadAnchorProgram(walletKeyPair);
 
@@ -198,7 +198,7 @@ async function airdropTransferV1() {
   for (let i = 0; i <= mintHashes.length; i++) {
     const holder = await getNFTOwner(mintHashes[i]);
     if (!holder || holder === '') continue;
-    await transferToken(new PublicKey(holder));
+    await transferToken(new anchor.web3.PublicKey(holder));
   }
 };
 
@@ -209,7 +209,7 @@ async function airdropTransferV2() {
   for (let i = 0; i <= mintHashes.length; i++) {
     const holder = await getNFTOwner(mintHashes[i]);
     if (!holder || holder === '') continue;
-    await transferToken(new PublicKey(holder));
+    await transferToken(new anchor.web3.PublicKey(holder));
   }
 };
 

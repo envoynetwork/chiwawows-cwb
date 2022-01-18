@@ -1,16 +1,20 @@
 import * as fs from 'fs';
 import * as anchor from '@project-serum/anchor';
-import { Keypair, Transaction } from '@solana/web3.js';
+import { ConfirmOptions, Keypair, Transaction } from '@solana/web3.js';
 import {TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID} from "@solana/spl-token";
 import { IDL } from './idl';
 import { CONNECTION, PROGRAM_ID } from './constants';
 
+const confirmOption : ConfirmOptions = {
+    commitment : 'finalized',
+    preflightCommitment : 'finalized',
+    skipPreflight : false
+  }
+
 export async function loadAnchorProgram(walletKeyPair: Keypair) {
     // @ts-ignore
     const walletWrapper = new anchor.Wallet(walletKeyPair);
-    const provider = new anchor.Provider(CONNECTION, walletWrapper, {
-      preflightCommitment: 'recent',
-    });
+    const provider = new anchor.Provider(CONNECTION, walletWrapper, confirmOption);
     const idl = IDL as anchor.Idl;
   
     const program = new anchor.Program(idl, PROGRAM_ID, provider);

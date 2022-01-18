@@ -1,18 +1,33 @@
 export const IDL = 
 {
-  "version": "0.0.0",
-  "name": "nft_candy_machine",
+  "version": "0.1.0",
+  "name": "solana_anchor",
   "instructions": [
     {
-      "name": "initializeContract",
+      "name": "initPool",
       "accounts": [
         {
-          "name": "data",
+          "name": "owner",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "user",
+          "name": "pool",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "rand",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "airdropMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "airdropAccount",
           "isMut": false,
           "isSigner": false
         },
@@ -22,99 +37,78 @@ export const IDL =
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        },
+        {
+          "name": "bump",
+          "type": "u8"
+        }
+      ]
     },
     {
-      "name": "addWhitelist",
+      "name": "updatePool",
       "accounts": [
         {
-          "name": "data",
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "pool",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "minter",
+          "name": "airdropMint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "airdropAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "pubKey",
-          "type": "string"
+          "name": "amount",
+          "type": "u64"
         }
       ]
     },
     {
-      "name": "addWhitelists",
+      "name": "airdropTransfer",
       "accounts": [
         {
-          "name": "data",
+          "name": "owner",
           "isMut": true,
-          "isSigner": false
+          "isSigner": true
         },
         {
-          "name": "minter",
+          "name": "pool",
           "isMut": false,
           "isSigner": false
-        }
-      ],
-      "args": [
+        },
         {
-          "name": "addresses",
-          "type": {
-            "vec": "string"
-          }
-        }
-      ]
-    },
-    {
-      "name": "clearWhitelist",
-      "accounts": [
-        {
-          "name": "data",
+          "name": "sourceAirdropAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "minter",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "checkMintPossible",
-      "accounts": [
-        {
-          "name": "data",
+          "name": "destAirdropAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "minter",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "pubKey",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "setPending",
-      "accounts": [
-        {
-          "name": "data",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "minter",
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -122,15 +116,35 @@ export const IDL =
       "args": []
     },
     {
-      "name": "togglePeriod",
+      "name": "airdropMintTo",
       "accounts": [
         {
-          "name": "data",
+          "name": "owner",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "pool",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "airdropMint",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "minter",
+          "name": "destAirdropAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mintAuthority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -140,62 +154,63 @@ export const IDL =
   ],
   "accounts": [
     {
-      "name": "Data",
+      "name": "Pool",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "checkStatus",
-            "type": "u8"
+            "name": "owner",
+            "type": "publicKey"
           },
           {
-            "name": "periodStatus",
-            "type": "u8"
+            "name": "rand",
+            "type": "publicKey"
           },
           {
-            "name": "whitelist",
-            "type": {
-              "vec": "string"
-            }
+            "name": "airdropMint",
+            "type": "publicKey"
+          },
+          {
+            "name": "airdropAccount",
+            "type": "publicKey"
+          },
+          {
+            "name": "airdropAmount",
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
     }
   ],
-  "types": [
+  "errors": [
     {
-      "name": "ResultCode",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "NotAvailable"
-          },
-          {
-            "name": "Available"
-          },
-          {
-            "name": "NotExistInWhiteList"
-          }
-        ]
-      }
+      "code": 6000,
+      "name": "TokenMintToFailed",
+      "msg": "Token mint to failed"
     },
     {
-      "name": "PeriodStatus",
-      "type": {
-        "kind": "enum",
-        "variants": [
-          {
-            "name": "PendingSale"
-          },
-          {
-            "name": "PreSale"
-          },
-          {
-            "name": "PostSale"
-          }
-        ]
-      }
+      "code": 6001,
+      "name": "TokenSetAuthorityFailed",
+      "msg": "Token set authority failed"
+    },
+    {
+      "code": 6002,
+      "name": "TokenTransferFailed",
+      "msg": "Token transfer failed"
+    },
+    {
+      "code": 6003,
+      "name": "InvalidTokenAccount",
+      "msg": "Invalid token account"
+    },
+    {
+      "code": 6004,
+      "name": "InsufficientFunds",
+      "msg": "Insufficient Pool Funds"
     }
   ]
 };
