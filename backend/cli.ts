@@ -3,7 +3,7 @@ import * as anchor from '@project-serum/anchor';
 import { Keypair, Transaction } from '@solana/web3.js';
 import log from 'loglevel';
 import { AIRDROP_TOKEN_MINT, CONNECTION, POOL_ID, PROGRAM_ID } from './constants';
-import { createAssociatedTokenAccountInstruction, getTokenWallet, loadAnchorProgram, loadWalletKey, sendTransaction } from './util';
+import { createAssociatedTokenAccountInstruction, getTokenBalance, getTokenWallet, loadAnchorProgram, loadWalletKey, sendTransaction } from './util';
 
 program.version('0.0.1');
 
@@ -96,6 +96,38 @@ program.
     await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
     
     console.log(`Pool is updated: ${POOL_ID.toBase58()}`);
+});
+
+program.
+  command('get_pool')
+  .option(
+    '-k, --keypair <path>',
+    `Solana wallet location`,
+    '--keypair not provided',
+  )
+  .action(async (directory, cmd) => {
+    const { keypair } = cmd.opts();
+
+    let poolData: any = {};
+    try {
+      const poolTokenAcount = await getTokenWallet(POOL_ID, AIRDROP_TOKEN_MINT);
+      const tokenAmount = await getTokenBalance(poolTokenAcount);
+
+      const walletKeyPair = loadWalletKey(keypair);
+      const anchorProgram = await loadAnchorProgram(walletKeyPair);
+      let poolFetch = await anchorProgram.account.pool.fetch(POOL_ID);
+      poolData = {
+        owner : poolFetch.owner.toBase58(),
+        rand : poolFetch.rand.toBase58(),
+        airdropMint : poolFetch.airdropMint.toBase58(),
+        airdropAccount : poolFetch.airdropAccount.toBase58(),
+        airdropAmount : poolFetch.airdropAmount.toNumber(),
+        tokenAmount,
+        bump: poolFetch.bump
+      };
+    } catch (e) {}
+
+    console.log(poolData);
 });
 
 program.parse(process.argv);

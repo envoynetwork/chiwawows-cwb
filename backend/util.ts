@@ -39,6 +39,14 @@ export const getTokenWallet = async (
         )
     )[0];
 };
+
+export async function getTokenBalance(tokenAccount : anchor.web3.PublicKey) {
+    try {
+        const amount = (await CONNECTION.getTokenAccountBalance(tokenAccount)).value.uiAmount;
+        return amount? amount : 0;
+    } catch (e) {}
+    return 0;
+}
   
 export const createAssociatedTokenAccountInstruction = (
         associatedTokenAddress: anchor.web3.PublicKey,

@@ -39,12 +39,12 @@ export const IDL =
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
-        },
-        {
           "name": "bump",
           "type": "u8"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
         }
       ]
     },
