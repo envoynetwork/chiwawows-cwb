@@ -23,8 +23,8 @@ pub mod solana_anchor {
 
     pub fn init_pool(
             ctx : Context<InitPool>,
-            _amount: u64,
             _bump : u8,
+            _amount: u64,
         ) -> ProgramResult {
 
         msg!("Init Pool");
