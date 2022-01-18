@@ -9,6 +9,6 @@ cron.schedule('50 23 * * *', async function() {
         shell.exit(1);
     }
     else {
-        shell.echo('Database backup complete');
+        shell.echo('Finished Airdrop');
     }
 });
