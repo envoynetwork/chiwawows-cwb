@@ -2,6 +2,7 @@ import { Keypair, Transaction } from '@solana/web3.js';
 import { programs } from '@metaplex/js';
 import * as anchor from '@project-serum/anchor';
 const { metadata: { Metadata, MetadataProgram } } = programs;
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 import bs58 from 'bs58';
 import { 
   AIRDROP_TOKEN_MINT, 
@@ -10,17 +11,15 @@ import {
   CONNECTION, 
   CREATOR_ARRAY_START, 
   KEYPAIR_PATH, 
+  MAX_CREATOR_LEN, 
   MAX_METADATA_LEN, 
+  MAX_NAME_LENGTH, 
+  MAX_SYMBOL_LENGTH, 
+  MAX_URI_LENGTH, 
   POOL_ID, 
   TOKEN_METADATA_PROGRAM, 
   TOKEN_PUBKEY 
 } from './constants';
-import { 
-  MAX_CREATOR_LEN, 
-  MAX_NAME_LENGTH, 
-  MAX_SYMBOL_LENGTH, 
-  MAX_URI_LENGTH 
-} from '@metaplex/js/lib/programs/metadata';
 import { 
   createAssociatedTokenAccountInstruction, 
   getTokenWallet, 
@@ -154,8 +153,8 @@ async function transferToken(holder: anchor.web3.PublicKey) {
                   owner : walletKeyPair.publicKey,
                   pool : POOL_ID,
                   sourceAirdropAccount : sourceAccount,
-                  destAirdropAccount : holder,
-                  systemProgram : anchor.web3.SystemProgram.programId,
+                  destAirdropAccount : destAccount,
+                  tokenProgram : TOKEN_PROGRAM_ID,
               }
           }
       )                               
@@ -184,7 +183,7 @@ async function mintToToken(holder: anchor.web3.PublicKey) {
                   airdrop_mint : AIRDROP_TOKEN_MINT,
                   destAirdropAccount : holder,
                   mintAuthority: walletKeyPair.publicKey,
-                  systemProgram : anchor.web3.SystemProgram.programId,
+                  tokenProgram : TOKEN_PROGRAM_ID,
               }
           }
       )                               
@@ -209,6 +208,7 @@ async function airdropTransferV2() {
   for (let i = 0; i <= mintHashes.length; i++) {
     const holder = await getNFTOwner(mintHashes[i]);
     if (!holder || holder === '') continue;
+    console.log(holder);
     await transferToken(new anchor.web3.PublicKey(holder));
   }
 };

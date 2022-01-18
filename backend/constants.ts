@@ -7,7 +7,7 @@ export const CONNECTION = new anchor.web3.Connection(RPC_HOST_URL);
 export const PROGRAM_ID = new anchor.web3.PublicKey('FLbXLhQKfKcwJ9AZbnmqgexgy4wDLuwLZaTPJJo515jC');
 export const POOL_ID = new anchor.web3.PublicKey('7Vteu9VMuoTqdQDEJ3JZ4eVP2DDNaeJLftb1WmM3FWhW');
 export const AIRDROP_TOKEN_MINT = new anchor.web3.PublicKey('HtJD15RcUEAztidwPqha3t2BDEgLsjZTpzjceGDQYp37');
-export const KEYPAIR_PATH = "";
+export const KEYPAIR_PATH = "E:\\program.json";
 
 // Immutable
 export const MAX_NAME_LENGTH = 32;
