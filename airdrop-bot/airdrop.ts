@@ -1,4 +1,4 @@
-import { Keypair, Transaction } from '@solana/web3.js';
+import { Keypair, PublicKey, Transaction } from '@solana/web3.js';
 import { programs } from '@metaplex/js';
 import * as anchor from '@project-serum/anchor';
 const { metadata: { Metadata, MetadataProgram } } = programs;
@@ -18,6 +18,7 @@ import {
   MAX_URI_LENGTH, 
   POOL_ID, 
   TOKEN_METADATA_PROGRAM, 
+  TOKEN_METADATA_PROGRAM_ID, 
   TOKEN_PUBKEY 
 } from './constants';
 import { 
@@ -191,12 +192,41 @@ async function mintToToken(holder: anchor.web3.PublicKey) {
   await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
 }
 
+async function checkGen0(holder: string, mint: string) {
+  try {
+    const owner = new PublicKey(holder);
+    let [pda] = await anchor.web3.PublicKey.findProgramAddress([
+      Buffer.from("metadata"),
+      TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+      (new anchor.web3.PublicKey(mint)).toBuffer(),
+    ], TOKEN_METADATA_PROGRAM_ID);
+    const accountInfo: any = await CONNECTION.getParsedAccountInfo(pda);
+    const metadata: any = new Metadata(owner.toString(), accountInfo.value);
+    const name = metadata.data.data.name;
+    const splits = name.split('#');
+    if (splits && splits.length > 1) {
+      const id = parseInt(splits[1]);
+      if (id >= 0 && id <= 1111) {
+        return true;
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  return false;
+}
+
 async function airdropTransferV1() {
   const mintHashes = await fetchHashTableV1(CANDY_MACHINE_ID);
 
   for (let i = 0; i <= mintHashes.length; i++) {
     const holder = await getNFTOwner(mintHashes[i]);
     if (!holder || holder === '') continue;
+    
+    const isGen0 = await checkGen0(holder, mintHashes[i]);
+    if (!isGen0) continue;
+
+    console.log(holder);
     await transferToken(new anchor.web3.PublicKey(holder));
   }
 };
@@ -208,6 +238,10 @@ async function airdropTransferV2() {
   for (let i = 0; i <= mintHashes.length; i++) {
     const holder = await getNFTOwner(mintHashes[i]);
     if (!holder || holder === '') continue;
+
+    const isGen0 = await checkGen0(holder, mintHashes[i]);
+    if (!isGen0) continue;
+
     console.log(holder);
     await transferToken(new anchor.web3.PublicKey(holder));
   }
