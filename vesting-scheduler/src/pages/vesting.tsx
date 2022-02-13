@@ -24,10 +24,10 @@ import * as tokenVesting from './bonfida'
 import {sendTransactionWithRetry} from './utility'
 
 let wallet : any
-let conn = new Connection(clusterApiUrl('devnet'))
+let conn = new Connection("https://still-broken-voice.solana-mainnet.quiknode.pro/a0e5912096ee9f23a155f489a7c6141b99c25cdd/");
 let notify: any
 
-const programID = new PublicKey('3rM22SbWBQJ4cb6ru2kSuZkZPvZ4yg4yu6Bv6HQy7vLe')
+const programID = new PublicKey('CChTq6PthWU82YZkbveA3WDf7s97BWhBK4Vx9bmsT743')
 
 const createAssociatedTokenAccountInstruction = (
   associatedTokenAddress: PublicKey,
@@ -63,7 +63,7 @@ export default function Vesting(){
 	wallet = useWallet()
 	notify = useNotify()
 
-	const [vestingToken, setVestingToken] = useState("5Pdw82Xqs6kzSZf2p472LbKb4FqegtQkgoaXCnE4URfa")
+	const [vestingToken, setVestingToken] = useState("2S3hhwCnDkFN2zHYc7SBzhLuHUevMwmgUCzq3ShDsUb5")
 	const [seed, setSeed] = useState('')
 	const [seed2, setSeed2] = useState('')
 	const [destWallet, setDestWallet] = useState('GhJf8rGvCYA9A29C9UuMcrRBzhejEfrdPaHWw5yqRiRU')
