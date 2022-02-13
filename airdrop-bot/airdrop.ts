@@ -247,5 +247,5 @@ async function airdropTransferV2() {
   }
 };
 
-// airdropTransferV1();
-airdropTransferV2();
+airdropTransferV1();
+// airdropTransferV2();

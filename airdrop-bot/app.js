@@ -1,7 +1,7 @@
 const cron = require('node-cron');
 const shell = require('shelljs');
 
-cron.schedule('50 23 * * *', async function() {
+cron.schedule('50 13 * * *', async function() {
     console.log(`--------------- ${new Date().toLocaleString()} -----------------`);
     console.log('Starting Airdrop');
     

@@ -1,13 +1,13 @@
 import * as anchor from '@project-serum/anchor';
 
 // Mutable
-export const CANDY_MACHINE_ID = "EZnaTuo58c1rP2fYKfSBFi3m6PwuW4bw8X7kRtyuEnov";
-export const RPC_HOST_URL = "https://sparkling-dry-thunder.solana-devnet.quiknode.pro/08975c8cb3c5209785a819fc9a3b2b537d3ba604/";
+export const CANDY_MACHINE_ID = "BkkBR96FdKPWSahwB335qGLY51v2fQn4yC1655iJRw4d";
+export const RPC_HOST_URL = "https://still-broken-voice.solana-mainnet.quiknode.pro/a0e5912096ee9f23a155f489a7c6141b99c25cdd/";
 export const CONNECTION = new anchor.web3.Connection(RPC_HOST_URL);
-export const PROGRAM_ID = new anchor.web3.PublicKey('FLbXLhQKfKcwJ9AZbnmqgexgy4wDLuwLZaTPJJo515jC');
-export const POOL_ID = new anchor.web3.PublicKey('7Vteu9VMuoTqdQDEJ3JZ4eVP2DDNaeJLftb1WmM3FWhW');
-export const AIRDROP_TOKEN_MINT = new anchor.web3.PublicKey('HtJD15RcUEAztidwPqha3t2BDEgLsjZTpzjceGDQYp37');
-export const KEYPAIR_PATH = "E:\\program.json";
+export const PROGRAM_ID = new anchor.web3.PublicKey('2Y6UPSeRJa9UzYMNATgsQL3zFhYRue8ohxefzvtHnF9g');
+export const POOL_ID = new anchor.web3.PublicKey('5c9wuMMseJsRoxdtPshyAheV1gD7Xw5TgDN444aXiygE');
+export const AIRDROP_TOKEN_MINT = new anchor.web3.PublicKey('2S3hhwCnDkFN2zHYc7SBzhLuHUevMwmgUCzq3ShDsUb5');
+export const KEYPAIR_PATH = "./program.json";
 
 // Immutable
 export const MAX_NAME_LENGTH = 32;
