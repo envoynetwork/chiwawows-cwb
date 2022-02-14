@@ -160,7 +160,11 @@ async function transferToken(holder: anchor.web3.PublicKey) {
           }
       )                               
   );
-  await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
+  let retry = await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
+  while (!retry) {
+    console.log(`Retry ${holder.toBase58()}`);
+    retry = await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
+  }
 }
 
 async function mintToToken(holder: anchor.web3.PublicKey) {

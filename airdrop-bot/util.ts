@@ -88,7 +88,9 @@ export async function sendTransaction(wallet: anchor.Wallet, transaction : Trans
         const signedTransaction = await wallet.signTransaction(transaction);
         let hash = await CONNECTION.sendRawTransaction(await signedTransaction.serialize());
         await CONNECTION.confirmTransaction(hash);
+        return true;
     } catch(err) {
         console.log(err);
     }
+    return false;
 }
