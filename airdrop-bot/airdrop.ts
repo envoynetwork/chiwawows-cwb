@@ -160,11 +160,8 @@ async function transferToken(holder: anchor.web3.PublicKey) {
           }
       )                               
   );
-  let retry = await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
-  while (!retry) {
-    console.log(`Retry ${holder.toBase58()}`);
-    retry = await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
-  }
+  const flag = await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
+  return flag;
 }
 
 async function mintToToken(holder: anchor.web3.PublicKey) {
@@ -193,7 +190,8 @@ async function mintToToken(holder: anchor.web3.PublicKey) {
           }
       )                               
   );
-  await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
+  const flag = await sendTransaction(new anchor.Wallet(walletKeyPair), transaction, signers);
+  return flag;
 }
 
 async function checkGen0(holder: string, mint: string) {
@@ -222,6 +220,7 @@ async function checkGen0(holder: string, mint: string) {
 
 async function airdropTransferV1() {
   const mintHashes = await fetchHashTableV1(CANDY_MACHINE_ID);
+  let failedList = [];
 
   for (let i = 0; i <= mintHashes.length; i++) {
     const holder = await getNFTOwner(mintHashes[i]);
@@ -231,13 +230,31 @@ async function airdropTransferV1() {
     if (!isGen0) continue;
 
     console.log(holder);
-    await transferToken(new anchor.web3.PublicKey(holder));
+    const flag = await transferToken(new anchor.web3.PublicKey(holder));
+    if (!flag) failedList.push(holder);
+  }
+
+  let allSuccess = false;
+  while (!allSuccess) {
+    console.log(`Retry ${failedList.length} holders`);
+    let anotherFailedList = [];
+    for (let holder of failedList) {
+      console.log(holder);
+      const flag = await transferToken(new anchor.web3.PublicKey(holder));
+      if (!flag) anotherFailedList.push(holder);
+    }
+    allSuccess = true;
+    if (anotherFailedList.length > 0) {
+      allSuccess = false;
+      failedList = anotherFailedList.slice();
+    }
   }
 };
 
 async function airdropTransferV2() {
   const candyMachineCreator = await getCandyMachineV2Creator(CANDY_MACHINE_ID);
   const mintHashes = await fetchHashTableV2(candyMachineCreator[0]);
+  let failedList = [];
 
   for (let i = 0; i <= mintHashes.length; i++) {
     const holder = await getNFTOwner(mintHashes[i]);
@@ -247,7 +264,24 @@ async function airdropTransferV2() {
     if (!isGen0) continue;
 
     console.log(holder);
-    await transferToken(new anchor.web3.PublicKey(holder));
+    const flag = await transferToken(new anchor.web3.PublicKey(holder));
+    if (!flag) failedList.push(holder);
+  }
+
+  let allSuccess = false;
+  while (!allSuccess) {
+    console.log(`Retry ${failedList.length} holders`);
+    let anotherFailedList = [];
+    for (let holder of failedList) {
+      console.log(holder);
+      const flag = await transferToken(new anchor.web3.PublicKey(holder));
+      if (!flag) anotherFailedList.push(holder);
+    }
+    allSuccess = true;
+    if (anotherFailedList.length > 0) {
+      allSuccess = false;
+      failedList = anotherFailedList.slice();
+    }
   }
 };
 
