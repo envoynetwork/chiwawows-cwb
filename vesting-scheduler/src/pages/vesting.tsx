@@ -24,7 +24,7 @@ import * as tokenVesting from './bonfida'
 import {sendTransactionWithRetry} from './utility'
 
 let wallet : any
-let conn = new Connection("https://still-broken-voice.solana-mainnet.quiknode.pro/a0e5912096ee9f23a155f489a7c6141b99c25cdd/");
+let conn = new Connection("https://dark-shy-waterfall.solana-mainnet.quiknode.pro/6513ec4172ac666ed25c1e3a169bf320a05fdd95/");
 let notify: any
 
 const programID = new PublicKey('CChTq6PthWU82YZkbveA3WDf7s97BWhBK4Vx9bmsT743')

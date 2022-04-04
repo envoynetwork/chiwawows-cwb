@@ -2,7 +2,7 @@ import * as anchor from '@project-serum/anchor';
 
 // Mutable
 export const CANDY_MACHINE_ID = "BkkBR96FdKPWSahwB335qGLY51v2fQn4yC1655iJRw4d";
-export const RPC_HOST_URL = "https://still-broken-voice.solana-mainnet.quiknode.pro/a0e5912096ee9f23a155f489a7c6141b99c25cdd/";
+export const RPC_HOST_URL = "https://dark-shy-waterfall.solana-mainnet.quiknode.pro/6513ec4172ac666ed25c1e3a169bf320a05fdd95/";
 export const CONNECTION = new anchor.web3.Connection(RPC_HOST_URL);
 export const PROGRAM_ID = new anchor.web3.PublicKey('2Y6UPSeRJa9UzYMNATgsQL3zFhYRue8ohxefzvtHnF9g');
 export const POOL_ID = new anchor.web3.PublicKey('5c9wuMMseJsRoxdtPshyAheV1gD7Xw5TgDN444aXiygE');
